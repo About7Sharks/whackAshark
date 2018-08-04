@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Whack-A-Shark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Whack-A-Shark
+        <span class="score">0</span>
+    </h1>
+    <button onclick="startGame()">Start Game</button>
+    <div class="game">
+        <div class="wave wave1">
+            <div class=" shark"></div>
+        </div>
+        <div class="wave wave2">
+            <div class=" shark"></div>
+        </div>
+        <div class="wave wave3">
+            <div class=" shark"></div>
+        </div>
+        <div class="wave wave4">
+            <div class=" shark"></div>
+        </div>
+        <div class="wave wave5">
+            <div class=" shark"></div>
+        </div>
+        <div class="wave wave6">
+            <div class=" shark"></div>
+        </div>
+    </div>
+
+
+
+    <script>
+    const waves=document.querySelectorAll('.wave');
+    const scoreBoard=document.querySelector('.score');
+    const sharks= document.querySelectorAll('.shark');
+    let lastWave;
+    timeUp= false;
+    let score = 0;
+
+        function randTime(min,max){
+            return Math.round(Math.random()*(max-min)+min);
+        }
+        function randWave(waves){
+            const idx = Math.floor(Math.random()* waves.length);
+            const wave = waves[idx];
+            if(wave===lastWave){
+               return randWave(waves)
+            }
+            lastWave=wave;
+            return wave;
+        }
+
+        function peep(){
+            const time = randTime(200,1000);
+            const wave = randWave(waves);
+            wave.classList.add('up')
+            setTimeout(()=>{
+                wave.classList.remove('up');
+               if(!timeUp)peep();
+            }, time);
+        } 
+        function startGame(){
+            let score = 0;
+            scoreBoard.textContent=0;
+            timeUp=false;
+            peep();
+            setTimeout(()=> timeUp = true, 10000)
+        }
+        function bonk(e){
+            if(!e.isTrusted) return;
+            score++;
+            this.classList.remove('up');
+            scoreBoard.textContent= score;
+            console.log(e);
+        }
+        sharks.forEach(shark => shark.addEventListener('click', bonk));
+
+    </script>
+</body>
+
+</html>
